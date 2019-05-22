@@ -36,6 +36,7 @@ public class SignatureView extends View {
     private boolean enableSignature;
     private float penSize;
     private Context context;
+    private Listener listener;
 
     @SuppressWarnings("deprecation")
     public SignatureView(Context context, AttributeSet attrs) {
@@ -226,6 +227,8 @@ public class SignatureView extends View {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                 onTouchUpEvent(event.getX(), event.getY());
+                if (listener != null)
+                    listener.onDone();
                 break;
             default:
                 break;
@@ -288,7 +291,7 @@ public class SignatureView extends View {
     }
 
     private void drawLine(final float lastWidth, final float currentWidth,
-            final float velocity) {
+                          final float velocity) {
         final Point mid1 = midPoint(previousPoint, startPoint);
         final Point mid2 = midPoint(currentPoint, previousPoint);
 
@@ -302,7 +305,7 @@ public class SignatureView extends View {
     }
 
     private void draw(Point p0, Point p1, Point p2, float lastWidth,
-            float currentWidth, float velocity) {
+                      float currentWidth, float velocity) {
         if (canvasBmp != null) {
             float xa, xb, ya, yb, x, y;
             float increment;
@@ -387,5 +390,13 @@ public class SignatureView extends View {
      */
     public String getVersionName() {
         return BuildConfig.VERSION_NAME;
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    public interface Listener {
+        void onDone();
     }
 }

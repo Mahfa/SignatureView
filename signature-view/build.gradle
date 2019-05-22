@@ -1,12 +1,10 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
 
 version = "1.2"
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         minSdkVersion 14
@@ -22,96 +20,3 @@ android {
     }
 }
 
-configurations {
-    javadocDeps
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    javadocDeps 'com.android.support:support-annotations:27.0.2'
-}
-
-def siteUrl = 'https://github.com/zahid-ali-shah/SignatureView'
-def gitUrl = 'https://github.com/zahid-ali-shah/SignatureView.git'
-group = "com.kyanogen.signatureview"
-
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'aar'
-
-                // Add your description here
-                name 'signature-view'
-                description = 'An Android library for creating pen like signatures on custom view'
-                url siteUrl
-
-                // Set your license
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'zahid'
-                        name 'Syed Zahid'
-                        email 'syed.zahid.ali.sha@gmail.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-// https://github.com/bintray/gradle-bintray-plugin
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        // it is the name that appears in bintray when logged
-        name = "signature-view"
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
-//        version {
-//            gpg {
-//                sign = true //Determines whether to GPG sign the files. The default is false
-//                passphrase = properties.getProperty("bintray.gpg.password") //Optional. The passphrase for GPG signing'
-//            }
-//        }
-    }
-}

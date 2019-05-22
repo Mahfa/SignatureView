@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -36,6 +37,12 @@ public class Signature extends AppCompatActivity {
 
         int colorPrimary = ContextCompat.getColor(this, R.color.colorAccent);
         signatureView.setPenColor(colorPrimary);
+        signatureView.setListener(new SignatureView.Listener() {
+            @Override
+            public void onDone() {
+                Log.d("seeee", "onDone() called");
+            }
+        });
         // or like signatureView.setPenColor(Color.RED);
     }
 
